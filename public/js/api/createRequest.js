@@ -3,15 +3,19 @@
  * на сервер.
  * */
 const createRequest = (options = {}) => {
+    console.log('options');
+    console.log(options);
   // подготовим url и параметры запроса
   const method = options.method.toUpperCase();
-  const url = new URL(options.url);
+  let url = options.url;
   let formData;
   if (options.data) {
     if (method === 'GET') {
+      url += url.indexOf('?') >= 0 ? '&' : '?';
       for (let key in options.data) {
-        url.searchParams.set(key, options.data[key]);
+        url += key + '=' + encodeURI(options.data[key]) + '&';
       }
+      url = url.slice(0, -1);
     } else {
       formData = new FormData();
       for (let key in options.data) {
@@ -33,13 +37,13 @@ const createRequest = (options = {}) => {
     xhr.withCredentials = true;
     if (options.callback) {
       xhr.addEventListener('readystatechange', function() {
-        if (this.readyState == request.DONE && this.status == 200) {
-          console.log(this.responseText);
-          const response = JSON.parse(this.responseText);
-          if (response.success) {
+        if (this.readyState == xhr.DONE && this.status == 200) {
+          let response = this.response;
+          console.log(response);
+          if (response && response.success) {
             options.callback(null, response);
-          } else {
-            options.response(response.error);
+          } else if (response && response.error) {
+            options.callback(response.error);
           }
         }
       });
@@ -47,7 +51,7 @@ const createRequest = (options = {}) => {
     xhr.send(formData);
   } catch (e) {
     if (options.callback) {
-      options.collback(e);
+      options.callback(e);
     }
   }
   return xhr;

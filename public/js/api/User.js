@@ -11,7 +11,7 @@ class User {
    * локальном хранилище.
    * */
   static setCurrent(user) {
-    window.localStorage.setItem('user', user);
+    window.localStorage.setItem('user', JSON.stringify(user));
   }
 
   /**
@@ -27,7 +27,11 @@ class User {
    * из локального хранилища
    * */
   static current() {
-    return window.localStorage.getItem('user');
+    try {
+      return JSON.parse(window.localStorage.getItem('user'));
+    } catch (error) {
+      return null;
+    }
   }
 
   /**
@@ -36,7 +40,7 @@ class User {
    * */
   static fetch( data, callback = f => f ) {
     return createRequest({
-      url: Entity.URL + '/current',
+      url: User.URL + '/current',
       method: 'GET',
       data: data,
       responseType: 'json',
@@ -59,11 +63,13 @@ class User {
    * */
   static login( data, callback = f => f ) {
     return createRequest({
-      url: Entity.URL + '/login',
+      url: User.URL + '/login',
       method: 'POST',
       data: data,
       responseType: 'json',
       callback: function(err, response) {
+        console.log('++++++++++++++++++++++');
+        console.log(response);
         if (response && response.success && response.user) {
           User.setCurrent(response.user);
         }
@@ -80,7 +86,7 @@ class User {
    * */
   static register( data, callback = f => f ) {
     return createRequest({
-      url: Entity.URL + '/register',
+      url: User.URL + '/register',
       method: 'POST',
       data: data,
       responseType: 'json',
@@ -99,7 +105,7 @@ class User {
    * */
   static logout( data, callback = f => f ) {
     return createRequest({
-      url: Entity.URL + '/logout',
+      url: User.URL + '/logout',
       method: 'POST',
       data: data,
       responseType: 'json',
