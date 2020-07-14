@@ -23,7 +23,7 @@ class Entity {
    * */
   static list( data, callback = f => f ) {
     return createRequest({
-      url: Entity.URL,
+      url: this.URL,
       method: 'GET',
       data: data,
       responseType: 'json',
@@ -38,7 +38,7 @@ class Entity {
    * */
   static create( data, callback = f => f ) {
     return createRequest({
-      url: Entity.URL,
+      url: this.URL,
       method: 'POST',
       data: Object.assign({_method: 'PUT'}, data),
       responseType: 'json',
@@ -52,7 +52,7 @@ class Entity {
    * */
   static get( id = '', data, callback = f => f ) {
     return createRequest({
-      url: Entity.URL,
+      url:this.URL + '/' + id,
       method: 'GET',
       data: data,
       responseType: 'json',
@@ -66,9 +66,9 @@ class Entity {
    * */
   static remove( id = '', data, callback = f => f ) {
     return createRequest({
-      url: Entity.URL,
+      url: this.URL,
       method: 'POST',
-      data: Object.assign({_method: 'DELETE'}, data),
+      data: Object.assign({_method: 'DELETE', id: id}, data),
       responseType: 'json',
       callback: callback
     });

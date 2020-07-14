@@ -14,14 +14,12 @@ class RegisterForm extends AsyncForm {
     User.register(
       this.getData(),
       function(err, response) {
-        if (response.success) {
-          App.getForm('register').reset();
+        if (response && response.success) {
+          App.getForm('register').element.reset();
+          App.getModal('register').close();
           App.setState('user-logged');
-        }
-        const modalId = this.closest('.modal').dataset['modalId'];
-        const modal = App.getModal(modalId);
-        if (modal) {
-          modal.close();
+        } else if (err) {
+          alert(JSON.stringify(err));
         }
       }
     );

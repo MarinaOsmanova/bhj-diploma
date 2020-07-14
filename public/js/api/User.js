@@ -68,8 +68,6 @@ class User {
       data: data,
       responseType: 'json',
       callback: function(err, response) {
-        console.log('++++++++++++++++++++++');
-        console.log(response);
         if (response && response.success && response.user) {
           User.setCurrent(response.user);
         }

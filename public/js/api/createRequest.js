@@ -3,8 +3,6 @@
  * на сервер.
  * */
 const createRequest = (options = {}) => {
-    console.log('options');
-    console.log(options);
   // подготовим url и параметры запроса
   const method = options.method.toUpperCase();
   let url = options.url;
@@ -39,7 +37,6 @@ const createRequest = (options = {}) => {
       xhr.addEventListener('readystatechange', function() {
         if (this.readyState == xhr.DONE && this.status == 200) {
           let response = this.response;
-          console.log(response);
           if (response && response.success) {
             options.callback(null, response);
           } else if (response && response.error) {
